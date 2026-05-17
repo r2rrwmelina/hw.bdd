@@ -19,25 +19,27 @@ public class TransferPage {
         subtitle.should(Condition.visible).should(Condition.text("Пополнение карты"));
     }
 
-    public UserCardsPage successTransaction(DataHelper.Card card, int amount) {
+    private void transaction(DataHelper.Card card, int amount) {
         amountField.setValue(String.valueOf(amount));
         from.setValue(card.getNumber());
+    }
+
+    public UserCardsPage successTransaction(DataHelper.Card card, int amount) {
+        transaction(card, amount);
         transferButton.click();
         return new UserCardsPage();
     }
 
     public UserCardsPage cancelTransaction(DataHelper.Card card, int amount) {
-        amountField.setValue(String.valueOf(amount));
-        from.setValue(card.getNumber());
+        transaction(card, amount);
         cancelButton.click();
         return new UserCardsPage();
     }
 
-    public TransferPage errorTransaction(DataHelper.Card card, int amount) {
-        amountField.setValue(String.valueOf(amount));
-        from.setValue(card.getNumber());
+    public TransferPage errorTransaction(DataHelper.Card card, int amount, String message) {
+        transaction(card, amount);
         transferButton.click();
-        errorMessage.should(Condition.visible).should(Condition.text("Ошибка"));
+        errorMessage.should(Condition.visible).should(Condition.text(message));
         return this;
     }
 }
